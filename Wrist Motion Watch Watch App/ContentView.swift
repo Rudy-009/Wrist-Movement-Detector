@@ -8,17 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-    }
-}
 
-#Preview {
-    ContentView()
+    @State var viewModel: RecordingViewModel
+    var storage: WatchRecordingStorage
+
+    var body: some View {
+        RecordingView(viewModel: viewModel, storage: storage)
+    }
 }

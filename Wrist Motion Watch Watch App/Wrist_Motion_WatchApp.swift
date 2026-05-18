@@ -9,9 +9,39 @@ import SwiftUI
 
 @main
 struct Wrist_Motion_Watch_Watch_AppApp: App {
+
+    // MARK: - DI 구성 (앱 수명과 동일한 싱글턴)
+
+    private let sessionManager   = WatchSessionManager()
+    private let motionTracker    = MotionTracker()
+    private let recordingStorage = WatchRecordingStorage()
+
+    private let transferService: WatchTransferService
+    private let startUseCase:    StartRecordingUseCase
+    private let stopUseCase:     StopRecordingUseCase
+
+    @State private var recordingViewModel: RecordingViewModel
+
+    init() {
+        let transfer = WatchTransferService(sessionManager: sessionManager)
+        let start = StartRecordingUseCase(recorder: motionTracker, storage: recordingStorage)
+        let stop  = StopRecordingUseCase(
+            recorder: motionTracker,
+            storage:  recordingStorage,
+            transfer: transfer
+        )
+
+        transferService       = transfer
+        startUseCase          = start
+        stopUseCase           = stop
+        _recordingViewModel   = State(wrappedValue:
+            RecordingViewModel(startUseCase: start, stopUseCase: stop)
+        )
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: recordingViewModel, storage: recordingStorage)
         }
     }
 }
