@@ -6,6 +6,9 @@
 //
 
 import WatchConnectivity
+import os
+
+private let logger = Logger(subsystem: "com.iseungjun.Wrist-Motion", category: "WCSession")
 
 @Observable
 final class WatchSessionManager: NSObject {
@@ -46,6 +49,11 @@ extension WatchSessionManager: WCSessionDelegate {
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
         state = WCSession.default.activationState
+        if let error {
+            logger.error("✗ WCSession 활성화 실패: \(error.localizedDescription)")
+        } else {
+            logger.debug("✔ WCSession 활성화 완료 — state: \(activationState.rawValue)")
+        }
     }
 
     #if os(iOS)
@@ -64,6 +72,8 @@ extension WatchSessionManager: WCSessionDelegate {
 
     #if os(iOS)
     func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        let size = (try? FileManager.default.attributesOfItem(atPath: file.fileURL.path)[.size] as? Int) ?? 0
+        logger.debug("▶︎ [6] iPhone didReceive — file: \(file.fileURL.lastPathComponent), size: \(size)B, metadata: \(String(describing: file.metadata))")
         onFileReceived?(file)
     }
     #endif
@@ -94,14 +104,27 @@ extension WatchSessionManager: WCSessionDelegate {
 extension WatchSessionManager {
 
     func sendFile(file: URL, metadata: [String: Any]?) {
-        guard WCSession.default.activationState == .activated else { return }
+        let activationState = WCSession.default.activationState
+        #if os(watchOS)
+        let isInstalled = WCSession.default.isCompanionAppInstalled
+        logger.debug("▶︎ [3b] sendFile 호출 — activation: \(activationState.rawValue), companionAppInstalled: \(isInstalled), file: \(file.lastPathComponent)")
+        #endif
+        guard activationState == .activated else {
+            logger.error("✗ sendFile 중단 — WCSession not activated (state: \(activationState.rawValue))")
+            return
+        }
         WCSession.default.transferFile(file, metadata: metadata)
+        logger.debug("▶︎ [3c] WCSession.transferFile 호출 완료")
     }
 
     func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: (any Error)?) {
         #if os(watchOS)
+        if let error {
+            logger.error("✗ [5] didFinish 전송 실패 — \(error.localizedDescription)")
+        } else {
+            logger.debug("✔ [5] didFinish 전송 성공 — file: \(fileTransfer.file.fileURL.lastPathComponent)")
+        }
         // Apple 문서: "Do not delete the file until after it has been delivered."
-        // didFinish에서 파일을 삭제해야 함.
         if error == nil {
             try? FileManager.default.removeItem(at: fileTransfer.file.fileURL)
         }

@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import os
+
+private let logger = Logger(subsystem: "com.iseungjun.Wrist-Motion", category: "Transfer")
 
 /// RecordingTransferProtocol → WatchSessionManager.sendFile 어댑터.
 final class WatchTransferService: RecordingTransferProtocol {
@@ -24,6 +27,7 @@ final class WatchTransferService: RecordingTransferProtocol {
             "sampleCount":  session.sampleCount,
             "samplingRate": session.samplingRate
         ]
+        logger.debug("▶︎ [3a] WatchTransferService.transfer — sessionID: \(session.id.uuidString), sampleCount: \(session.sampleCount)")
         sessionManager.sendFile(file: fileURL, metadata: metadata)
     }
 }

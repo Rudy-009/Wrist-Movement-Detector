@@ -44,6 +44,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Models/MotionSample.swift,
+				Models/RecordingCommand.swift,
 				Models/RecordingSession.swift,
 				Protocols/MotionRecorderProtocol.swift,
 				Protocols/RecordingStorageProtocol.swift,

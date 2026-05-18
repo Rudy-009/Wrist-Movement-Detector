@@ -39,17 +39,23 @@ struct Wrist_MotionApp: App {
         )
         let importUC  = ImportRecordingUseCase(repository: repo)
         let receiver  = FileReceiveService(importUseCase: importUC)
+        let listVM    = RecordingListViewModel(repository: repo)
 
         // WCSession 파일 수신 → FileReceiveService 연결
         sm.onFileReceived = { file in
             Task { @MainActor in receiver.handle(file: file) }
         }
 
+        // 녹화 저장 완료 → 목록 자동 갱신
+        importUC.onRecordingSaved = { [listVM] in
+            Task { @MainActor in listVM.load() }
+        }
+
         sessionManager  = sm
         repository      = repo
         importUseCase   = importUC
         fileReceiver    = receiver
-        _listViewModel    = State(wrappedValue: RecordingListViewModel(repository: repo))
+        _listViewModel    = State(wrappedValue: listVM)
         _watchControlVM   = State(wrappedValue: WatchControlViewModel(sessionManager: sm))
     }
 
