@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State var viewModel: RecordingListViewModel
+    @State var viewModel:      RecordingListViewModel
+    @State var watchControlVM: WatchControlViewModel
 
     var body: some View {
         NavigationStack {
-            RecordingListView(viewModel: viewModel)
+            RecordingListView(viewModel: viewModel, watchControlVM: watchControlVM)
         }
     }
 }

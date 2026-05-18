@@ -41,8 +41,7 @@ final class StopRecordingUseCase {
         )
 
         transfer.transfer(fileURL: fileURL, session: session)
-
-        // WCSession.transferFile은 즉시 파일을 복사하므로 temp 파일 삭제 가능
-        try? FileManager.default.removeItem(at: fileURL)
+        // 파일 삭제는 WatchSessionManager.didFinish 콜백에서 처리.
+        // Apple 문서: "Do not modify or delete the file until after it has been delivered."
     }
 }

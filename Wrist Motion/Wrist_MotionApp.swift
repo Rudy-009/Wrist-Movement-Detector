@@ -21,12 +21,13 @@ struct Wrist_MotionApp: App {
 
     // MARK: - DI 구성
 
-    private let sessionManager: WatchSessionManager
-    private let repository:     RecordingRepository
-    private let importUseCase:  ImportRecordingUseCase
-    private let fileReceiver:   FileReceiveService
+    private let sessionManager:  WatchSessionManager
+    private let repository:      RecordingRepository
+    private let importUseCase:   ImportRecordingUseCase
+    private let fileReceiver:    FileReceiveService
 
-    @State private var listViewModel: RecordingListViewModel
+    @State private var listViewModel:    RecordingListViewModel
+    @State private var watchControlVM:   WatchControlViewModel
 
     @MainActor
     init() {
@@ -48,12 +49,13 @@ struct Wrist_MotionApp: App {
         repository      = repo
         importUseCase   = importUC
         fileReceiver    = receiver
-        _listViewModel  = State(wrappedValue: RecordingListViewModel(repository: repo))
+        _listViewModel    = State(wrappedValue: RecordingListViewModel(repository: repo))
+        _watchControlVM   = State(wrappedValue: WatchControlViewModel(sessionManager: sm))
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: listViewModel)
+            ContentView(viewModel: listViewModel, watchControlVM: watchControlVM)
         }
         .modelContainer(container)
     }

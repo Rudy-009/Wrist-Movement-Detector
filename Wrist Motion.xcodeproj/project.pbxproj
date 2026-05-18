@@ -43,9 +43,23 @@
 		C093BA532FBB482A00C6AFED /* Exceptions for "Wrist Motion Core" folder in "Wrist Motion Watch Watch App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Models/MotionSample.swift,
+				Models/RecordingSession.swift,
+				Protocols/MotionRecorderProtocol.swift,
+				Protocols/RecordingStorageProtocol.swift,
+				Protocols/RecordingTransferProtocol.swift,
 				WatchSessionManager.swift,
 			);
 			target = C093BA3F2FBB420C00C6AFED /* Wrist Motion Watch Watch App */;
+		};
+		C093BAA72FBB541B00C6AFED /* Exceptions for "Wrist Motion Core" folder in "Wrist Motion" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Protocols/MotionRecorderProtocol.swift,
+				Protocols/RecordingStorageProtocol.swift,
+				Protocols/RecordingTransferProtocol.swift,
+			);
+			target = C0FB27692FBB3C7600338222 /* Wrist Motion */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -58,6 +72,7 @@
 		C093BA4F2FBB480900C6AFED /* Wrist Motion Core */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				C093BAA72FBB541B00C6AFED /* Exceptions for "Wrist Motion Core" folder in "Wrist Motion" target */,
 				C093BA532FBB482A00C6AFED /* Exceptions for "Wrist Motion Core" folder in "Wrist Motion Watch Watch App" target */,
 			);
 			path = "Wrist Motion Core";

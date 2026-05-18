@@ -9,15 +9,18 @@ import SwiftUI
 
 struct RecordingListView: View {
 
-    @State var viewModel: RecordingListViewModel
+    @State var viewModel:        RecordingListViewModel
+    @State var watchControlVM:   WatchControlViewModel
 
     var body: some View {
         List {
+            watchControlSection
+
             if viewModel.recordings.isEmpty {
                 ContentUnavailableView(
                     "녹화 없음",
                     systemImage: "waveform.slash",
-                    description: Text("Apple Watch에서 녹화를 시작하세요.")
+                    description: Text("Watch 또는 아래 버튼으로 녹화를 시작하세요.")
                 )
             } else {
                 ForEach(viewModel.recordings) { session in
@@ -43,6 +46,52 @@ struct RecordingListView: View {
         }
         .onAppear {
             viewModel.load()
+        }
+    }
+
+    // MARK: - Watch 제어 섹션
+
+    private var watchControlSection: some View {
+        Section {
+            HStack {
+                // 연결 상태 표시
+                Label(
+                    watchControlVM.isReachable ? "Watch 연결됨" : "Watch 연결 안 됨",
+                    systemImage: watchControlVM.isReachable ? "applewatch" : "applewatch.slash"
+                )
+                .foregroundStyle(watchControlVM.isReachable ? .green : .secondary)
+                .font(.subheadline)
+
+                Spacer()
+
+                // 녹화 제어 버튼
+                switch watchControlVM.watchState {
+                case .recording:
+                    Button {
+                        watchControlVM.stopRecording()
+                    } label: {
+                        Label("중지", systemImage: "stop.circle.fill")
+                            .foregroundStyle(.red)
+                    }
+                    .buttonStyle(.bordered)
+                case .idle, .notConnected:
+                    Button {
+                        watchControlVM.startRecording()
+                    } label: {
+                        Label("녹화", systemImage: "record.circle")
+                            .foregroundStyle(.red)
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!watchControlVM.isReachable)
+                }
+            }
+        } header: {
+            Text("Watch 제어")
+        } footer: {
+            if !watchControlVM.isReachable {
+                Text("Watch 앱을 실행하고 iPhone과 가까이 두세요.")
+                    .font(.caption2)
+            }
         }
     }
 }

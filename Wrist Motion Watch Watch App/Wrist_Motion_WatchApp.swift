@@ -38,6 +38,16 @@ struct Wrist_Motion_Watch_Watch_AppApp: App {
             Task { @MainActor in vm.transferDidComplete() }
         }
 
+        // iPhone으로부터 녹화 명령 수신 → ViewModel 동작 수행
+        sessionManager.onCommandReceived = { [vm] command in
+            Task { @MainActor in
+                switch command {
+                case .start: vm.startRecording()
+                case .stop:  vm.stopRecording()
+                }
+            }
+        }
+
         transferService     = transfer
         startUseCase        = start
         stopUseCase         = stop
