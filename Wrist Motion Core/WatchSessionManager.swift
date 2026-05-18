@@ -9,9 +9,15 @@ import WatchConnectivity
 
 @Observable
 final class WatchSessionManager: NSObject {
-    
+
     var state = WCSessionActivationState.notActivated
     var isRechable: Bool = false
+
+    #if os(iOS)
+    /// iPhone 전용: Watch로부터 파일을 수신하면 호출되는 클로저.
+    /// FileReceiveService에서 주입.
+    var onFileReceived: ((WCSessionFile) -> Void)?
+    #endif
     
     override init() {
         super.init()
@@ -45,6 +51,12 @@ extension WatchSessionManager: WCSessionDelegate {
     func sessionReachabilityDidChange(_ session: WCSession) {
         isRechable = WCSession.default.isReachable
     }
+
+    #if os(iOS)
+    func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        onFileReceived?(file)
+    }
+    #endif
 }
 
 extension WatchSessionManager {
