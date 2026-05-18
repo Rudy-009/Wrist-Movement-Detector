@@ -15,8 +15,12 @@ final class WatchSessionManager: NSObject {
 
     #if os(iOS)
     /// iPhone 전용: Watch로부터 파일을 수신하면 호출되는 클로저.
-    /// FileReceiveService에서 주입.
     var onFileReceived: ((WCSessionFile) -> Void)?
+    #endif
+
+    #if os(watchOS)
+    /// Watch 전용: 파일 전송이 완료(성공/실패)되면 호출되는 클로저.
+    var onTransferDidFinish: ((Error?) -> Void)?
     #endif
     
     override init() {
@@ -65,6 +69,8 @@ extension WatchSessionManager {
     }
     
     func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: (any Error)?) {
-        
+        #if os(watchOS)
+        onTransferDidFinish?(error)
+        #endif
     }
 }

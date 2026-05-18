@@ -31,12 +31,17 @@ struct Wrist_Motion_Watch_Watch_AppApp: App {
             transfer: transfer
         )
 
-        transferService       = transfer
-        startUseCase          = start
-        stopUseCase           = stop
-        _recordingViewModel   = State(wrappedValue:
-            RecordingViewModel(startUseCase: start, stopUseCase: stop)
-        )
+        let vm = RecordingViewModel(startUseCase: start, stopUseCase: stop)
+
+        // 파일 전송 완료 → ViewModel을 idle 상태로 복귀
+        sessionManager.onTransferDidFinish = { [vm] _ in
+            Task { @MainActor in vm.transferDidComplete() }
+        }
+
+        transferService     = transfer
+        startUseCase        = start
+        stopUseCase         = stop
+        _recordingViewModel = State(wrappedValue: vm)
     }
 
     var body: some Scene {
