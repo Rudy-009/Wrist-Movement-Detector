@@ -6,9 +6,6 @@
 //
 
 import Foundation
-import os
-
-private let logger = Logger(subsystem: "com.iseungjun.Wrist-Motion", category: "Receive")
 
 @MainActor
 final class ImportRecordingUseCase {
@@ -24,8 +21,6 @@ final class ImportRecordingUseCase {
 
     /// WCSession metadata를 파싱하여 RecordingSession을 구성하고 영구 저장.
     func execute(tempFileURL: URL, metadata: [String: Any]) throws {
-        logger.debug("▶︎ [8] ImportUseCase.execute — metadata keys: \(metadata.keys.joined(separator: ", "))")
-
         guard
             let idString    = metadata["sessionID"]   as? String,
             let id          = UUID(uuidString: idString),
@@ -34,11 +29,8 @@ final class ImportRecordingUseCase {
             let sampleCount = metadata["sampleCount"] as? Int,
             let rate        = metadata["samplingRate"] as? Int
         else {
-            logger.error("✗ [8] metadata 파싱 실패 — raw: \(metadata)")
             throw ImportRecordingError.malformedMetadata
         }
-
-        logger.debug("▶︎ [8a] 파싱 성공 — id: \(idString), samples: \(sampleCount), duration: \(duration)s")
 
         let session = RecordingSession(
             id:          id,
@@ -49,7 +41,6 @@ final class ImportRecordingUseCase {
             samplingRate: rate
         )
         try repository.save(session: session, from: tempFileURL)
-        logger.debug("✔ [8b] repository.save 완료")
 
         onRecordingSaved?()
     }
