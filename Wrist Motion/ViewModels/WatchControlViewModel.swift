@@ -22,6 +22,8 @@ final class WatchControlViewModel {
 
     var isReachable: Bool { sessionManager.isRechable }
 
+    var onStopRecording: ((Date) -> Void)?
+
     private let sessionManager: WatchSessionManager
 
     init(sessionManager: WatchSessionManager) {
@@ -38,5 +40,6 @@ final class WatchControlViewModel {
         guard sessionManager.state == .activated else { return }
         sessionManager.sendCommand(.stop)
         watchState = .idle
+        onStopRecording?(Date())
     }
 }
