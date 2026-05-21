@@ -51,12 +51,17 @@ struct Wrist_MotionApp: App {
             Task { @MainActor in listVM.load() }
         }
 
+        let watchVM = WatchControlViewModel(sessionManager: sm)
+        watchVM.onStopRecording = { [importUC] stopAt in
+            importUC.pendingStopAt = stopAt
+        }
+
         sessionManager  = sm
         repository      = repo
         importUseCase   = importUC
         fileReceiver    = receiver
         _listViewModel    = State(wrappedValue: listVM)
-        _watchControlVM   = State(wrappedValue: WatchControlViewModel(sessionManager: sm))
+        _watchControlVM   = State(wrappedValue: watchVM)
     }
 
     var body: some Scene {

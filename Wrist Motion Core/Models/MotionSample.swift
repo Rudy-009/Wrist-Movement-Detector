@@ -60,6 +60,16 @@ enum MotionSampleSerializer {
         }
     }
 
+    static func write(_ samples: [MotionSample], to url: URL) throws {
+        let sampleSize = MemoryLayout<MotionSample>.stride
+        var data = Data(capacity: headerSize + samples.count * sampleSize)
+        var m = magic; var v = version
+        withUnsafeBytes(of: &m) { data.append(contentsOf: $0) }
+        withUnsafeBytes(of: &v) { data.append(contentsOf: $0) }
+        samples.withUnsafeBytes { data.append(contentsOf: $0) }
+        try data.write(to: url, options: .atomic)
+    }
+
     enum SerializerError: Error {
         case invalidHeader
         case truncated

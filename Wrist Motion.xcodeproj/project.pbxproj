@@ -62,11 +62,21 @@
 			);
 			target = C0FB27692FBB3C7600338222 /* Wrist Motion */;
 		};
+		C093BAF92FBC48B800C6AFED /* Exceptions for "Wrist Motion Watch Watch App" folder in "Wrist Motion Watch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Wrist-Motion-Watch-Watch-App-Info.plist",
+			);
+			target = C093BA3F2FBB420C00C6AFED /* Wrist Motion Watch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C093BA412FBB420C00C6AFED /* Wrist Motion Watch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C093BAF92FBC48B800C6AFED /* Exceptions for "Wrist Motion Watch Watch App" folder in "Wrist Motion Watch Watch App" target */,
+			);
 			path = "Wrist Motion Watch Watch App";
 			sourceTree = "<group>";
 		};
@@ -264,6 +274,7 @@
 				DEVELOPMENT_TEAM = 2QJX795Q3R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Wrist-Motion-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Wrist Motion Watch";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.iseungjun.Wrist-Motion";
@@ -297,6 +308,7 @@
 				DEVELOPMENT_TEAM = 2QJX795Q3R;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Wrist-Motion-Watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Wrist Motion Watch";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.iseungjun.Wrist-Motion";
